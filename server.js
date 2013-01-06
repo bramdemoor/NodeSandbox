@@ -36,6 +36,11 @@ app.io.route('moved', function(req) {
     }
 });
 
+app.io.route('shoot', function(req) {
+    console.log('Player fired a shot!');
+    req.io.broadcast('shoot', req.data);
+});
+
 app.listen(8080);
 
 // Temporary server-side broadcast loop.
@@ -44,7 +49,7 @@ function resp() {
     setTimeout(function() {
         app.io.broadcast('playerInfo', players);
         resp();
-    }, 300);
+    }, 400);
 }
 
 resp();

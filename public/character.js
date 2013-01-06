@@ -81,7 +81,8 @@ $(function() {
             var dir = self.sprite.scaleX;
             var x = self.sprite.x + 10 + (25 * dir);
             var y = self.sprite.y + 10;
-            var bullet = new App.Bullet(x, y, dir);
+            new App.Bullet(x, y, dir);
+            App.socket.emit('shoot', { name: self.name, x: x, y: y, dir: dir });
         };
 
         self.die = function () {
