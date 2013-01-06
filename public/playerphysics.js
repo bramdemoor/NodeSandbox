@@ -46,6 +46,15 @@ $(function() {
             return dest.y - OFFSET_Y;
         };
 
+        self.hitTest = function(x,y) {
+            return App.GameEngine.Map.hitTest(x, y);
+        };
+
+        self.resetForUpdate = function() {
+            self.goalx = 0;
+            self.jumping = true;
+        };
+
         self.update = function(currentX, currentY) {
             self.currentX = currentX;
             self.currentY = currentY;
@@ -61,7 +70,8 @@ $(function() {
                     self.jump();
                 }
             }
-            this.goalx = 0;
+
+            self.resetForUpdate();
 
             if (App.GameEngine.Game.input.left) self.goalx -= GOAL_INC_HORIZONTAL;
             if (App.GameEngine.Game.input.right) self.goalx += GOAL_INC_HORIZONTAL;
@@ -73,8 +83,10 @@ $(function() {
 
             self.updateBoundingBox();
 
-            self.jumping = true;
+            self.handleCollisions();
+        };
 
+        self.handleCollisions = function() {
             while (true) {
 
                 self.centerx = dest.x - self.currentX - OFFSET_X;
@@ -82,46 +94,46 @@ $(function() {
 
                 if (self.wantsToMoveRight()) {
 
-                    boundary = Math.floor(dest.right / CHARACTER_WIDTH) * CHARACTER_WIDTH;
-                    crossing = (dest.right - boundary) / self.centerx * self.centery + dest.y;
+                    self.boundary = Math.floor(dest.right / CHARACTER_WIDTH) * CHARACTER_WIDTH;
+                    self.crossing = (dest.right - self.boundary) / self.centerx * self.centery + dest.y;
 
                     if (self.hitTestRight()) {
                         self.incx = 0;
-                        dest.x = boundary - dest.width - COLISSION_CORRECTION;
+                        dest.x = self.boundary - dest.width - COLISSION_CORRECTION;
                         self.player.onCollideRight();
                         continue;
                     }
 
                 } else if (self.wantsToMoveLeft()) {
 
-                    boundary = Math.floor(dest.x / CHARACTER_WIDTH) * CHARACTER_WIDTH + CHARACTER_WIDTH;
-                    crossing = (boundary - dest.x) / self.centerx * self.centery + dest.y;
+                    self.boundary = Math.floor(dest.x / CHARACTER_WIDTH) * CHARACTER_WIDTH + CHARACTER_WIDTH;
+                    self.crossing = (self.boundary - dest.x) / self.centerx * self.centery + dest.y;
 
                     if (self.hitTestLeft()) {
                         self.incx = 0;
-                        dest.x = boundary + COLISSION_CORRECTION;
+                        dest.x = self.boundary + COLISSION_CORRECTION;
                         self.player.onCollideLeft();
                         continue;
                     }
                 }
                 if (self.wantsToMoveDown()) {
 
-                    boundary = Math.floor(dest.bottom / CHARACTER_HEIGHT) * CHARACTER_HEIGHT;
-                    crossing = (dest.bottom - boundary) / self.centery * self.centerx + dest.x;
+                    self.boundary = Math.floor(dest.bottom / CHARACTER_HEIGHT) * CHARACTER_HEIGHT;
+                    self.crossing = (dest.bottom - self.boundary) / self.centery * self.centerx + dest.x;
                     if (self.hitTestBottom()) {
                         self.jumping = false;
                         self.incy = 0;
-                        dest.y = boundary - dest.height - COLISSION_CORRECTION;
-                        self.player.onCollideFloor(crossing, boundary);
+                        dest.y = self.boundary - dest.height - COLISSION_CORRECTION;
+                        self.player.onCollideFloor(self.crossing, self.boundary);
                         continue;
                     }
                 } else if (self.wantsToMoveUp()) {
 
-                    boundary = Math.floor(dest.y / CHARACTER_HEIGHT) * CHARACTER_HEIGHT + CHARACTER_HEIGHT;
-                    crossing = (boundary - dest.y) / self.centery * self.centerx + dest.x;
+                    self.boundary = Math.floor(dest.y / CHARACTER_HEIGHT) * CHARACTER_HEIGHT + CHARACTER_HEIGHT;
+                    self.crossing = (self.boundary - dest.y) / self.centery * self.centerx + dest.x;
                     if (self.hitTestTop()) {
                         self.incy = 0;
-                        dest.y = boundary + COLISSION_CORRECTION;
+                        dest.y = self.boundary + COLISSION_CORRECTION;
                         self.player.onCollideTop();
                         continue;
                     }
@@ -150,41 +162,37 @@ $(function() {
             }
         };
 
-        self.hitTest = function(x,y) {
-            return App.GameEngine.Map.hitTest(x, y);
-        };
-
         self.hitTestRight = function () {
-
-            return ((self.hitTest(boundary, crossing)
-                && !self.hitTest(boundary - CHARACTER_WIDTH, crossing))
-
-                || (self.hitTest(boundary, crossing + dest.height)
-                && !self.hitTest(boundary - CHARACTER_WIDTH, crossing + dest.height)));
+            return (
+                (self.hitTest(self.boundary, self.crossing) && !self.hitTest(self.boundary - CHARACTER_WIDTH, self.crossing))
+                ||
+                (self.hitTest(self.boundary, self.crossing + dest.height) && !self.hitTest(self.boundary - CHARACTER_WIDTH, self.crossing + dest.height))
+                )
         };
 
         self.hitTestLeft = function() {
-            return ((self.hitTest(boundary - CHARACTER_WIDTH, crossing)
-                && !self.hitTest(boundary, crossing))
+            return (
+                (self.hitTest(self.boundary - CHARACTER_WIDTH, self.crossing)
+                && !self.hitTest(self.boundary, self.crossing))
 
-                || (self.hitTest(boundary - CHARACTER_WIDTH, crossing + dest.height)
-                && !self.hitTest(boundary, crossing + dest.height)))
+                || (self.hitTest(self.boundary - CHARACTER_WIDTH, self.crossing + dest.height)
+                && !self.hitTest(self.boundary, self.crossing + dest.height)))
         };
 
         self.hitTestBottom = function() {
-            return ((self.hitTest(crossing, boundary)
-                && !self.hitTest(crossing, boundary - CHARACTER_HEIGHT))
-
-                || (self.hitTest(crossing + dest.width, boundary)
-                && !self.hitTest(crossing + dest.width, boundary - CHARACTER_HEIGHT)))
+            return (
+                (self.hitTest(self.crossing, self.boundary) && !self.hitTest(self.crossing, self.boundary - CHARACTER_HEIGHT))
+                ||
+                (self.hitTest(self.crossing + dest.width, self.boundary) && !self.hitTest(self.crossing + dest.width, self.boundary - CHARACTER_HEIGHT))
+                )
         };
 
         self.hitTestTop = function() {
-            return ((self.hitTest(crossing, boundary - CHARACTER_HEIGHT)
-                && !self.hitTest(crossing, boundary))
-
-                || (self.hitTest(crossing + dest.width, boundary - CHARACTER_HEIGHT)
-                && !self.hitTest(crossing + dest.width, boundary)))
+            return (
+                (self.hitTest(self.crossing, self.boundary - CHARACTER_HEIGHT) && !self.hitTest(self.crossing, self.boundary))
+                ||
+                (self.hitTest(self.crossing + dest.width, self.boundary - CHARACTER_HEIGHT) && !self.hitTest(self.crossing + dest.width, self.boundary))
+                )
         };
 
         self.wantsToMoveRight = function() {
