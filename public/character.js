@@ -15,6 +15,8 @@ $(function() {
             self.sprite.y = self.physics.getY();
             self.nameLabel.x = self.physics.getX() - 2;
             self.nameLabel.y = self.physics.getY() - 20;
+
+            self.scrollView();
         };
 
         self.onWantsToMove = function() {
@@ -28,6 +30,15 @@ $(function() {
                 self.sprite.frame = self.pose + 1;
             } else {
                 self.sprite.frame = 0;
+            }
+        };
+
+        self.scrollView = function() {
+            var cut = 128;
+            if (App.GameEngine.Stage.x > cut - self.sprite.x) {
+                App.GameEngine.Stage.x = cut - self.sprite.x;
+            } else if (App.GameEngine.Stage.x < cut - self.sprite.x) {
+                App.GameEngine.Stage.x = cut - self.sprite.x;
             }
         };
 
