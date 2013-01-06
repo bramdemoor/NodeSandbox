@@ -15,8 +15,8 @@ $(function() {
         var COLISSION_CORRECTION = 0.01;
         var GRAVITY = 2;
         var JUMP_FORCE = 5;
-        var FRICTION_LIMIT = 0.3;
-        var GOAL_INC_HORIZONTAL = 0.5;
+        var FRICTION_LIMIT = 0.5;
+        var GOAL_INC_HORIZONTAL = 0.9;
 
         // Calculation variables
         self.currentX = 0;
