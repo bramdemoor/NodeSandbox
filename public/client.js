@@ -18,6 +18,10 @@ $(function() {
         App.Model.updatePlayers(data);
     });
 
+    App.socket.on('shoot', function(data) {
+        App.Model.playerShoots(data);
+    });
+
     App.GameEngine.initialize();
 
     $.getJSON('activeLevel', function(data) {

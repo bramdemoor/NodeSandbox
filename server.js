@@ -18,7 +18,7 @@ app.get('/activeLevel', function(req, res) {
 var players = [];
 
 app.io.route('join', function(req) {
-    players.push({ name : req.data.name, x: 0, y: 0 });
+    players.push({ name : req.data.name, x: 0, y: 0, health: 100, score: 0 });
     console.log('Player joined: ' + req.data.name);
     req.io.emit('joinSuccess', req.data)
 });
@@ -30,13 +30,15 @@ app.io.route('disconnect', function() {
 app.io.route('moved', function(req) {
     for(var i = 0; i < players.length; i++) {
         if(players[i].name == req.data.name) {
-            players[i] = req.data;
+            players[i].x = req.data.x;
+            players[i].y = req.data.y;
+            players[i].health = req.data.health;
+            players[i].score = req.data.score;
         }
     }
 });
 
 app.io.route('shoot', function(req) {
-    console.log('Player fired a shot!');
     req.io.broadcast('shoot', req.data);
 });
 

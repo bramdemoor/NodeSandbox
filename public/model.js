@@ -3,7 +3,7 @@ $(function() {
     App.ViewModelObj = function () {
         var self = this;
 
-        var nameSuggestions = ['Brutus', 'Sniper', 'Destroyer', 'Razorblade'];
+        var nameSuggestions = ['Brutus', 'Sniper', 'Destroyer', 'Razorblade','Incisor','Garfield','Fons','Jefke','Jupiter', 'Poseidon', 'Dragon'];
         self.localPlayerName = ko.observable(nameSuggestions[Math.floor(Math.random() * nameSuggestions.length)]);
         self.inGame = ko.observable(false);
         self.inMenu = ko.computed(function () { return !self.inGame(); });
@@ -23,22 +23,31 @@ $(function() {
             return self.characters().length > 0;
         });
         self.join = function() {
-            App.GameEngine.Player = new App.PlayerCharacter(self.localPlayerName());
-            App.GameEngine.Player.spawn();
             App.socket.emit('join', { name: self.localPlayerName() });
+        };
+        self.playerShoots = function(data) {
+            new App.Bullet(data.x, data.y, data.dir);
         };
         self.updatePlayers = function(players) {
             for(var i = 0; i<players.length; i++) {
                 var foundPlayer = false;
                 for(var j = 0; j<self.characters().length; j++) {
                     if(self.characters()[j].name === players[i].name) {
-                        self.characters()[j].serverUpdate(players[i]);
+                        if(!self.currentPlayer() || self.currentPlayer().name != self.characters()[j].name) {
+                            // WHY: Don't update the current player!
+                            self.characters()[j].serverUpdate(players[i]);
+                        }
+
                         foundPlayer = true;
                     }
                 }
                 if(foundPlayer == false) {
                     var newCh = new App.PlayerCharacter(players[i].name);
                     newCh.serverUpdate(players[i]);
+                    if(newCh.name === self.localPlayerName()) {
+                        self.currentPlayer(newCh);
+                        newCh.isLocal(true);
+                    }
                     self.characters.push(newCh);
                     newCh.spawn();
                 }

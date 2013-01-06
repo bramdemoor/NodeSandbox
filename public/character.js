@@ -11,20 +11,23 @@ $(function() {
         self.pose = 0;
         self.physics = undefined;
         self.alive = false;
-        self.isLocal = ko.observable(true);
+        self.isLocal = ko.observable(false);
         self.score = ko.observable(0);
         self.health = ko.observable(100);
 
         self.syncCounter = 0;
 
         self.serverUpdate = function(src) {
-            self.x = src.x;
-            self.y = src.y;
+            self.sprite.x = src.x;
+            self.sprite.y = src.y;
             self.score(src.score);
             self.health(src.health);
         };
 
         self.update = function() {
+
+            if(self.isLocal() == false) return;
+
             if(!self.alive) return;
 
             self.physics.update(self.sprite.x, self.sprite.y);
@@ -116,7 +119,6 @@ $(function() {
             self.sprite.y = spawnpoint.y;
             self.sprite.frame = 0;
 
-
             App.GameEngine.Stage.removeChild(self.sprite);
             App.GameEngine.Stage.removeChild(self.nameLabel);
 
@@ -125,7 +127,9 @@ $(function() {
 
             self.physics = new App.Physics(self, 32, 32);
 
-            self.sprite.addEventListener('enterframe', self.update);
+            if(self.isLocal()) {
+                self.sprite.addEventListener('enterframe', self.update);
+            }
 
             App.socket.emit('spawned', { });
 
