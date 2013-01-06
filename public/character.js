@@ -47,24 +47,23 @@ $(function() {
             self.nameLabel.y = self.physics.getY() - 20;
 
             if(self.isLocal()) {
-                if(self.sprite.y > 320) {
+                if(self.sprite.y > 320 || self.health() < 1) {
                     self.die();
                 }
 
                 self.scrollView();
 
-                if(true) {
-                    App.socket.emit('moved', {
-                        name: self.name,
-                        x: self.sprite.x,
-                        y: self.sprite.y,
-                        score: self.score(),
-                        health : self.health(),
-                        upPressed : self.upPressed,
-                        leftPressed : self.leftPressed,
-                        rightPressed : self.rightPressed
+                App.socket.emit('moved', {
+                    name: self.name,
+                    x: self.sprite.x,
+                    y: self.sprite.y,
+                    score: self.score(),
+                    health : self.health(),
+                    upPressed : self.upPressed,
+                    leftPressed : self.leftPressed,
+                    rightPressed : self.rightPressed
                 });
-                }
+
 
             }
         };
@@ -141,6 +140,8 @@ $(function() {
             App.GameEngine.Game.assets['../wav/gameover.wav'].play();
             self.sprite.frame = 3;
 
+            self.score(self.score() - 10);
+
             self.physics = undefined;   // Destroy this so it will be reset when spawning
 
             App.socket.emit('died', { });
@@ -154,6 +155,8 @@ $(function() {
             self.sprite.x = spawnpoint.x;
             self.sprite.y = spawnpoint.y;
             self.sprite.frame = 0;
+
+            self.health(100);
 
             App.GameEngine.Stage.removeChild(self.sprite);
             App.GameEngine.Stage.removeChild(self.nameLabel);

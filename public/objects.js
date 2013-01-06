@@ -19,7 +19,12 @@ $(function() {
             }
         };
         self.sprite.on('enterframe', function () {
-
+            if (App.Model.currentPlayer()) {
+                if (self.sprite.intersect(App.Model.currentPlayer().sprite)) {
+                    App.Model.currentPlayer().health(App.Model.currentPlayer().health() - 10);
+                    self.destroy();
+                }
+            }
         });
 
         self.sprite.tl.moveBy(500 * dir, 0, 40).then(function (e) { self.destroy(); });
