@@ -2,21 +2,106 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Ping</title>
-  <script src="/socket.io/socket.io.js"></script>
-  <script>
-      console.log('Connecting...');
-      var socket = io.connect();
-	  console.log('Connected. Sending ping...');
-      socket.on('ping', function(data) {
-		console.log('Ping from server received. Sending pong...');
-        var seq = data["seq"];
-        socket.emit('pong', { seq: seq + 1 });
-		console.log('Pong sent.');
-      });    
-  </script>
+    <title>Sandbox</title>
+    <link href="css/bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="css/custom.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="lib/jquery-1.7.2.js"></script>
+    <script type="text/javascript" src="lib/json2.js"></script>
+    <script type="text/javascript" src="lib/enchant.min.js"></script>
+    <script type="text/javascript" src="lib/knockout-2.2.0.js"></script>
+    <script type="text/javascript" src="lib/bootstrap.js"></script>
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="client.js"></script>
 </head>
 <body>
-  <p>Pinging server</p>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+                <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="brand" href="#">Sandbox</a>
+                <div class="nav-collapse collapse">
+                    <ul class="nav">
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div id="enchant-stage" class="well pull-left"></div>
+
+        <div id="sidebar-right" class="pull-right">
+
+            <div id="player-container" class="well">
+                <h2>Players</h2>
+                <div data-bind="visible: offlineMode">Offline mode!</div>
+                <div data-bind="visible: !hasPlayers()">
+                    No players connected
+                </div>
+                <table class="table" data-bind="visible: hasPlayers">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Score</th>
+                        <th>Health</th>
+                    </tr>
+                    </thead>
+                    <tbody data-bind="foreach: sortedCharacters">
+                    <tr data-bind="css: { success: isLocal() == true }">
+                        <td data-bind="text: name"></td>
+                        <td data-bind="text: score"></td>
+                        <td>
+                            <div class="progress progress-danger">
+                                <div class="bar" data-bind="style: { width: health() + '%' }"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <a href="#myModal" role="button" class="btn btn-success" data-bind="visible: inMenu" data-toggle="modal">Join game</a>
+            </div>
+
+            <div id="game-console" class="well">
+                <h2>Console</h2>
+                <div data-bind="foreach: logEntries">
+                    <div data-bind="text: $data"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Built by -BDM-</p>
+        <p>License: TBD :)</p>
+        <ul class="footer-links">
+            <li><a href="https://twitter.com/b_d_m" target="_blank">Twitter</a></li>
+            <li class="muted">·</li>
+            <li><a href="https://github.com/bramdemoor" target="_blank">GitHub</a></li>
+            <li class="muted">·</li>
+            <li><a href="http://bramdemoor.wordpress.com/" target="_blank">My blog</a></li>
+        </ul>
+    </footer>
+
+    <!-- Modal -->
+    <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="myModalLabel">Join game</h3>
+        </div>
+        <div class="modal-body">
+            <div>
+                Name: <input type="text" data-bind="value: localPlayerName" /><br />
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+            <button class="btn btn-primary" data-dismiss="modal"  data-bind="click: join">Join</button>
+        </div>
+    </div>
+
 </body>
 </html>
