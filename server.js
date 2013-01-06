@@ -22,7 +22,7 @@ io.sockets.on('connection', function (socket) {
     sequence: Math.floor(Math.random() * (2 << 16)),
     remain: 10,
     time: null
-  }
+  };
 
   var id = setInterval(function() {
     if (state.remain === 0) {
@@ -39,7 +39,7 @@ io.sockets.on('connection', function (socket) {
 });
 
 function receivePing (state, data) {
-  var clientSeq = data["seq"]
+  var clientSeq = data["seq"];
   if (clientSeq != state.sequence + 1 || state.time === null) {
     dropPingReceive(state);
     return;
@@ -48,7 +48,7 @@ function receivePing (state, data) {
   var currentTime = new Date();
   var diff = currentTime.getTime() - state.time.getTime();
   
-  console.log("Received packet with RTT of %d ms", diff)
+  console.log("Received packet with RTT of %d ms", diff);
 
   state.sequence += 2;
   state.time = null;
