@@ -77,6 +77,13 @@ $(function() {
             }
         };
 
+        self.shoot = function () {
+            var dir = self.sprite.scaleX;
+            var x = self.sprite.x + 10 + (25 * dir);
+            var y = self.sprite.y + 10;
+            var bullet = new App.Bullet(x, y, dir);
+        };
+
         self.die = function () {
             self.alive = false;
             App.GameEngine.Game.assets['../wav/gameover.wav'].play();

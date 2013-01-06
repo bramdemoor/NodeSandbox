@@ -18,13 +18,19 @@ $(function() {
 
             enchant.Sound.enabledInMobileSafari = true;
             enchant.ENV.USE_WEBAUDIO = true;
-            enchant.ENV.KEY_BIND_TABLE = { 37: 'left', 38: 'up', 39: 'right', 40: 'down' };
+            enchant.ENV.KEY_BIND_TABLE = { 37: 'left', 38: 'up', 39: 'right', 40: 'down',  32: 'a', 17: 'b' };  // arrow keys | space | ctrl
             enchant.ENV.PREVENT_DEFAULT_KEY_CODES = [37, 38, 39, 40, 32];
 
             App.GameEngine.Game = new Game(640, 320);
             App.GameEngine.Game.fps = 30;
             App.GameEngine.Game.scale = 1;
-            App.GameEngine.Game.preload('../img/map2.gif', '../img/chara1.gif', '../wav/jump.wav', '../wav/gameover.wav');
+            App.GameEngine.Game.preload('../img/map2.gif', '../img/chara1.gif', '../wav/jump.wav', '../wav/gameover.wav', '../img/icon0.png');
+
+            App.GameEngine.Game.rootScene.on('abuttondown', function (evt) {
+                if (App.GameEngine.Player) {
+                    App.GameEngine.Player.shoot();
+                }
+            });
         },
 
         getSpawnPoint : function () {
