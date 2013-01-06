@@ -30,8 +30,7 @@ app.io.route('disconnect', function() {
 app.io.route('moved', function(req) {
     for(var i = 0; i < players.length; i++) {
         if(players[i].name == req.data.name) {
-            players[i].x = req.data.x;
-            players[i].y = req.data.y;
+            players[i] = req.data;
         }
     }
 });

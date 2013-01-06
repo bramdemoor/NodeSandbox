@@ -11,8 +11,18 @@ $(function() {
         self.pose = 0;
         self.physics = undefined;
         self.alive = false;
+        self.isLocal = ko.observable(true);
+        self.score = ko.observable(0);
+        self.health = ko.observable(100);
 
         self.syncCounter = 0;
+
+        self.serverUpdate = function(src) {
+            self.x = src.x;
+            self.y = src.y;
+            self.score(src.score);
+            self.health(src.health);
+        };
 
         self.update = function() {
             if(!self.alive) return;
@@ -30,7 +40,7 @@ $(function() {
             self.scrollView();
 
             if(self.syncCounter == SYNC_SKIP) {
-                App.socket.emit('moved', { name: self.name, x: self.sprite.x, y: self.sprite.y });
+                App.socket.emit('moved', { name: self.name, x: self.sprite.x, y: self.sprite.y, score: self.score(), health : self.health() });
                 self.syncCounter = 0;
             } else {
                 self.syncCounter++;
@@ -86,6 +96,8 @@ $(function() {
         };
 
         self.die = function () {
+            self.health(0);
+
             self.alive = false;
             App.GameEngine.Game.assets['../wav/gameover.wav'].play();
             self.sprite.frame = 3;
