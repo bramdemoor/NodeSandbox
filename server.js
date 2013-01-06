@@ -18,7 +18,7 @@ app.get('/activeLevel', function(req, res) {
 var players = [];
 
 app.io.route('join', function(req) {
-    players.push({ name : req.data.name, x: 0, y: 0, health: 100, score: 0 });
+    players.push({ name : req.data.name, x: 0, y: 0, health: 100, score: 0, upPressed: false, leftPressed: false, rightPressed: false });
     console.log('Player joined: ' + req.data.name);
     req.io.emit('joinSuccess', req.data)
 });
@@ -34,6 +34,9 @@ app.io.route('moved', function(req) {
             players[i].y = req.data.y;
             players[i].health = req.data.health;
             players[i].score = req.data.score;
+            players[i].upPressed = req.data.upPressed;
+            players[i].leftPressed = req.data.leftPressed;
+            players[i].rightPressed = req.data.rightPressed;
         }
     }
 });
@@ -50,7 +53,7 @@ function resp() {
     setTimeout(function() {
         app.io.broadcast('playerInfo', players);
         resp();
-    }, 5);
+    }, 1);
 }
 
 resp();

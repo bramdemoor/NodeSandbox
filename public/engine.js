@@ -27,8 +27,8 @@ $(function() {
             App.GameEngine.Game.preload('../img/map2.gif', '../img/chara1.gif', '../wav/jump.wav', '../wav/gameover.wav', '../img/icon0.png');
 
             App.GameEngine.Game.rootScene.on('abuttondown', function (evt) {
-                if (App.GameEngine.Player) {
-                    App.GameEngine.Player.shoot();
+                if(App.Model.currentPlayer()) {
+                    App.Model.currentPlayer().shoot();
                 }
             });
         },
