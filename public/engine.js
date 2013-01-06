@@ -39,8 +39,8 @@ $(function() {
                 App.GameEngine.Game.rootScene.addChild(App.GameEngine.Stage);
                 App.GameEngine.Game.rootScene.backgroundColor = 'rgb(182, 255, 255)';
 
-                var ikke = new App.PlayerCharacter("Ikke");
-                ikke.spawn({ x: 100, y: 100 });
+                App.GameEngine.Player = new App.PlayerCharacter("Ikke");
+                App.GameEngine.Player.spawn({ x: 100, y: 100 });
             };
 
             App.GameEngine.Game.start();
