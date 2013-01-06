@@ -7,9 +7,12 @@ $(function() {
         console.log('response received!');
     });
 
-    $("#tester").click(function(e) {
-        App.socket.emit('drawClick', { tester: 'Bram'});
-    });
+    App.socket.emit('drawClick', { tester: 'Bram'});
 
+    App.Model = new App.ViewModelObj();
+
+    ko.applyBindings(App.Model);
+
+    App.Model.offlineMode(false);
 });
 
