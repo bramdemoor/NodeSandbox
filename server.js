@@ -2,7 +2,7 @@ var http = require('http'),
     fs = require('fs');
 
 var server = http.createServer(function (req, res) {
-  fs.readFile(__dirname + "/index.html", function (err, data) {
+  fs.readFile(__dirname + "/www/index.html", function (err, data) {
     if (err) {
       res.writeHead(500, { "Content-Type": "text/plain" });
       return res.end("Error");
