@@ -13,7 +13,7 @@ $(function() {
             App.GameEngine.Game = new Game(640, 320);
             App.GameEngine.Game.fps = 30;
             App.GameEngine.Game.scale = 1;
-            App.GameEngine.Game.preload('../img/map2.gif');
+            App.GameEngine.Game.preload('../img/map2.gif', '../img/chara1.gif');
         },
 
         start: function(mapData) {
@@ -23,10 +23,13 @@ $(function() {
                 var map = new Map(16, 16);
                 map.image = App.GameEngine.Game.assets['../img/map2.gif'];
                 map.loadData(mapData.blocks);
-                var stage = new Group();
-                stage.addChild(map);
-                App.GameEngine.Game.rootScene.addChild(stage);
+                App.GameEngine.Stage = new Group();
+                App.GameEngine.Stage.addChild(map);
+                App.GameEngine.Game.rootScene.addChild(App.GameEngine.Stage);
                 App.GameEngine.Game.rootScene.backgroundColor = 'rgb(182, 255, 255)';
+
+                var ikke = new App.PlayerCharacter("Ikke");
+                ikke.spawn({ x: 100, y: 100 });
             };
 
             App.GameEngine.Game.start();
