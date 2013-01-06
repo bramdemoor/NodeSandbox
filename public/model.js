@@ -23,7 +23,9 @@ $(function() {
             return self.characters().length > 0;
         });
         self.join = function() {
-
+            App.GameEngine.Player = new App.PlayerCharacter(self.localPlayerName());
+            App.GameEngine.Player.spawn();
+            App.socket.emit('join', { name: self.localPlayerName() });
         };
     };
 });

@@ -20,4 +20,8 @@ app.io.route('drawClick', function(req) {
     app.io.broadcast('draw')
 });
 
+app.io.route('join', function(req) {
+    console.log(req.data);
+});
+
 app.listen(8080);

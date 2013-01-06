@@ -42,9 +42,6 @@ $(function() {
                 App.GameEngine.Stage.addChild(App.GameEngine.Map);
                 App.GameEngine.Game.rootScene.addChild(App.GameEngine.Stage);
                 App.GameEngine.Game.rootScene.backgroundColor = 'rgb(182, 255, 255)';
-
-                App.GameEngine.Player = new App.PlayerCharacter("Ikke");
-                App.GameEngine.Player.spawn();
             };
 
             App.GameEngine.Game.start();

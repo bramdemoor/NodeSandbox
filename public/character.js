@@ -1,5 +1,7 @@
 $(function() {
     App.PlayerCharacter = function(name) {
+        var SYNC_SKIP = 25; // Sync every x frames
+
         var self = this;
 
         self.name = name;
@@ -9,6 +11,8 @@ $(function() {
         self.pose = 0;
         self.physics = undefined;
         self.alive = false;
+
+        self.syncCounter = 0;
 
         self.update = function() {
             if(!self.alive) return;
@@ -24,6 +28,13 @@ $(function() {
             }
 
             self.scrollView();
+
+            if(self.syncCounter == SYNC_SKIP) {
+                App.socket.emit('moved', { x: self.sprite.x, y: self.sprite.y });
+                self.syncCounter = 0;
+            } else {
+                self.syncCounter++;
+            }
         };
 
         self.onWantsToMove = function() {
@@ -53,17 +64,11 @@ $(function() {
             App.GameEngine.Game.assets['../wav/jump.wav'].clone().play();
         };
 
-        self.onCollideLeft = function() {
-            //
-        };
+        self.onCollideLeft = function() { };
 
-        self.onCollideRight = function() {
-            //
-        };
+        self.onCollideRight = function() { };
 
-        self.onCollideTop = function() {
-            //
-        };
+        self.onCollideTop = function() { };
 
         self.onCollideFloor = function(crossing, boundary) {
             if (App.GameEngine.Map.checkTile(crossing, boundary) == 10) {
@@ -78,6 +83,8 @@ $(function() {
             self.sprite.frame = 3;
 
             self.physics = undefined;   // Destroy this so it will be reset when spawning
+
+            App.socket.emit('died', { });
 
             self.sprite.tl.delay(20).then(function (e) { self.spawn(); });
         };
@@ -99,6 +106,8 @@ $(function() {
             self.physics = new App.Physics(self, 32, 32);
 
             self.sprite.addEventListener('enterframe', self.update);
+
+            App.socket.emit('spawned', { });
 
             self.alive = true;
         };
