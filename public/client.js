@@ -14,5 +14,7 @@ $(function() {
     ko.applyBindings(App.Model);
 
     App.Model.offlineMode(false);
+
+    App.GameEngine.initialize();
 });
 
