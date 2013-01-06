@@ -16,5 +16,9 @@ $(function() {
     App.Model.offlineMode(false);
 
     App.GameEngine.initialize();
+
+    $.getJSON('activeLevel', function(data) {
+        App.GameEngine.start(data);
+    });
 });
 
