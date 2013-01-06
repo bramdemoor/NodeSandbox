@@ -8,8 +8,11 @@ $(function() {
         self.nameLabel = new Label(self.name);
         self.pose = 0;
         self.physics = undefined;
+        self.alive = false;
 
         self.update = function() {
+            if(!self.alive) return;
+
             self.physics.update(self.sprite.x, self.sprite.y);
             self.sprite.x = self.physics.getX();
             self.sprite.y = self.physics.getY();
@@ -70,18 +73,13 @@ $(function() {
         };
 
         self.die = function () {
-            self.sprite.removeEventListener('enterframe');
+            self.alive = false;
+            App.GameEngine.Game.assets['../wav/gameover.wav'].play();
+            self.sprite.frame = 3;
 
             self.physics = undefined;   // Destroy this so it will be reset when spawning
 
-            App.GameEngine.Stage.removeChild(self.sprite);
-            App.GameEngine.Stage.removeChild(self.nameLabel);
-
-            App.GameEngine.Game.assets['../wav/gameover.wav'].play();
-
-            self.sprite.frame = 3;
-
-            self.spawn();
+            self.sprite.tl.delay(20).then(function (e) { self.spawn(); });
         };
 
         self.spawn = function () {
@@ -91,12 +89,18 @@ $(function() {
             self.sprite.y = spawnpoint.y;
             self.sprite.frame = 0;
 
+
+            App.GameEngine.Stage.removeChild(self.sprite);
+            App.GameEngine.Stage.removeChild(self.nameLabel);
+
             App.GameEngine.Stage.addChild(self.sprite);
             App.GameEngine.Stage.addChild(self.nameLabel);
 
             self.physics = new App.Physics(self, 32, 32);
 
             self.sprite.addEventListener('enterframe', self.update);
+
+            self.alive = true;
         };
     }
 });
