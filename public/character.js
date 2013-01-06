@@ -1,7 +1,5 @@
 $(function() {
     App.PlayerCharacter = function(name) {
-        var SYNC_SKIP = 5; // Sync every x frames
-
         var self = this;
 
         self.name = name;
@@ -15,6 +13,11 @@ $(function() {
         self.score = ko.observable(0);
         self.health = ko.observable(100);
 
+        // controls
+        self.upPressed = false;
+        self.leftPressed = false;
+        self.rightPressed = false;
+
         self.syncCounter = 0;
 
         self.serverUpdate = function(src) {
@@ -22,32 +25,65 @@ $(function() {
             self.sprite.y = src.y;
             self.score(src.score);
             self.health(src.health);
+            self.upPressed = src.upPressed;
+            self.leftPressed = src.leftPressed;
+            self.rightPressed = src.rightPressed;
         };
 
         self.update = function() {
 
-            if(self.isLocal() == false) return;
+            var inputChanged = false;
+            if(self.isLocal()) {
+                inputChanged = self.handleKeys();
+            }
 
             if(!self.alive) return;
 
-            self.physics.update(self.sprite.x, self.sprite.y);
+            console.log('update!!');
+            self.physics.update(self.sprite.x, self.sprite.y, self.upPressed, self.leftPressed, self.rightPressed);
             self.sprite.x = self.physics.getX();
             self.sprite.y = self.physics.getY();
             self.nameLabel.x = self.physics.getX() - 2;
             self.nameLabel.y = self.physics.getY() - 20;
 
-            if(self.sprite.y > 320) {
-                self.die();
-            }
+            if(self.isLocal()) {
+                if(self.sprite.y > 320) {
+                    self.die();
+                }
 
-            self.scrollView();
+                self.scrollView();
 
-            if(self.syncCounter == SYNC_SKIP) {
-                App.socket.emit('moved', { name: self.name, x: self.sprite.x, y: self.sprite.y, score: self.score(), health : self.health() });
-                self.syncCounter = 0;
-            } else {
-                self.syncCounter++;
+                if(true) {
+                    App.socket.emit('moved', {
+                        name: self.name,
+                        x: self.sprite.x,
+                        y: self.sprite.y,
+                        score: self.score(),
+                        health : self.health(),
+                        upPressed : self.upPressed,
+                        leftPressed : self.leftPressed,
+                        rightPressed : self.rightPressed
+                });
+                }
+
             }
+        };
+
+        self.handleKeys = function() {
+            var inputChanged = false;
+            if(self.upPressed != App.GameEngine.Game.input.up) {
+                self.upPressed = App.GameEngine.Game.input.up;
+                inputChanged = true;
+            }
+            if(self.leftPressed != App.GameEngine.Game.input.left) {
+                self.leftPressed = App.GameEngine.Game.input.left;
+                inputChanged = true;
+            }
+            if(self.rightPressed != App.GameEngine.Game.input.right) {
+                self.rightPressed = App.GameEngine.Game.input.right;
+                inputChanged = true;
+            }
+            return inputChanged;
         };
 
         self.onWantsToMove = function() {
@@ -127,9 +163,7 @@ $(function() {
 
             self.physics = new App.Physics(self, 32, 32);
 
-            if(self.isLocal()) {
-                self.sprite.addEventListener('enterframe', self.update);
-            }
+            self.sprite.addEventListener('enterframe', self.update);
 
             App.socket.emit('spawned', { });
 

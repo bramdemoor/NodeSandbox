@@ -51,18 +51,18 @@ $(function() {
             return App.GameEngine.Map.hitTest(x, y);
         };
 
-        self.update = function(currentX, currentY) {
+        self.update = function(currentX, currentY, upPressed, leftPressed, rightPressed) {
             self.currentX = currentX;
             self.currentY = currentY;
 
             self.calculateHorizontalFriction();
 
             if (self.jumping) {
-                if (!App.GameEngine.Game.input.up || --self.jumpBoost < 0) {
+                if (!upPressed || --self.jumpBoost < 0) {
                     self.goaly = 0;
                 }
             } else {
-                if (App.GameEngine.Game.input.up) {
+                if (upPressed) {
                     self.jump();
                 }
             }
@@ -70,8 +70,8 @@ $(function() {
             self.goalx = 0;
             self.jumping = true;
 
-            if (App.GameEngine.Game.input.left) self.goalx -= GOAL_INC_HORIZONTAL;
-            if (App.GameEngine.Game.input.right) self.goalx += GOAL_INC_HORIZONTAL;
+            if (leftPressed) self.goalx -= GOAL_INC_HORIZONTAL;
+            if (rightPressed) self.goalx += GOAL_INC_HORIZONTAL;
 
             // Not walking? Keep current. Otherwise, switch direction.
             self.goalDir = self.goalx == 0 ? 0 : (self.goalx > 0 ? 1 : -1);
