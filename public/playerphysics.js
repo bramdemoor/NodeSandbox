@@ -37,11 +37,13 @@ $(function() {
 
         /// Get the X-result of our calculation. To be called after update.
         self.getX = function() {
+            if(!self.dest) return 0;
             return self.dest.x - OFFSET_X;
         };
 
         /// Get the Y-result of our calculation. To be called after update.
         self.getY = function() {
+            if(!self.dest) return 0;
             return self.dest.y - OFFSET_Y;
         };
 

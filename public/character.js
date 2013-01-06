@@ -7,7 +7,7 @@ $(function() {
         self.sprite.image = App.GameEngine.Game.assets['../img/chara1.gif'];
         self.nameLabel = new Label(self.name);
         self.pose = 0;
-        self.physics = new App.Physics(self, 32, 32);
+        self.physics = undefined;
 
         self.update = function() {
             self.physics.update(self.sprite.x, self.sprite.y);
@@ -15,6 +15,10 @@ $(function() {
             self.sprite.y = self.physics.getY();
             self.nameLabel.x = self.physics.getX() - 2;
             self.nameLabel.y = self.physics.getY() - 20;
+
+            if(self.sprite.y > 320) {
+                self.die();
+            }
 
             self.scrollView();
         };
@@ -61,17 +65,36 @@ $(function() {
         self.onCollideFloor = function(crossing, boundary) {
             if (App.GameEngine.Map.checkTile(crossing, boundary) == 10) {
                 // Spikes!!!
-                // self.die();
+                 self.die();
             }
         };
 
-        self.spawn = function (spawnpoint) {
+        self.die = function () {
+            self.sprite.removeEventListener('enterframe');
+
+            self.physics = undefined;   // Destroy this so it will be reset when spawning
+
+            App.GameEngine.Stage.removeChild(self.sprite);
+            App.GameEngine.Stage.removeChild(self.nameLabel);
+
+            App.GameEngine.Game.assets['../wav/gameover.wav'].play();
+
+            self.sprite.frame = 3;
+
+            self.spawn();
+        };
+
+        self.spawn = function () {
+            var spawnpoint = App.GameEngine.getSpawnPoint();
+
             self.sprite.x = spawnpoint.x;
             self.sprite.y = spawnpoint.y;
             self.sprite.frame = 0;
 
             App.GameEngine.Stage.addChild(self.sprite);
             App.GameEngine.Stage.addChild(self.nameLabel);
+
+            self.physics = new App.Physics(self, 32, 32);
 
             self.sprite.addEventListener('enterframe', self.update);
         };

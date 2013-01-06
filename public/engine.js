@@ -24,7 +24,11 @@ $(function() {
             App.GameEngine.Game = new Game(640, 320);
             App.GameEngine.Game.fps = 30;
             App.GameEngine.Game.scale = 1;
-            App.GameEngine.Game.preload('../img/map2.gif', '../img/chara1.gif', '../wav/jump.wav');
+            App.GameEngine.Game.preload('../img/map2.gif', '../img/chara1.gif', '../wav/jump.wav', '../wav/gameover.wav');
+        },
+
+        getSpawnPoint : function () {
+             return { x: 100, y: 100 };
         },
 
         start: function(mapData) {
@@ -40,7 +44,7 @@ $(function() {
                 App.GameEngine.Game.rootScene.backgroundColor = 'rgb(182, 255, 255)';
 
                 App.GameEngine.Player = new App.PlayerCharacter("Ikke");
-                App.GameEngine.Player.spawn({ x: 100, y: 100 });
+                App.GameEngine.Player.spawn();
             };
 
             App.GameEngine.Game.start();
