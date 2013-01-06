@@ -21,7 +21,10 @@ app.io.route('join', function(req) {
     players.push({ name : req.data.name, x: 0, y: 0 });
     console.log('Player joined: ' + req.data.name);
     req.io.emit('joinSuccess', req.data)
-    app.io.broadcast('playerInfo', players);
+});
+
+app.io.route('disconnect', function() {
+    console.log('USER DISCONNECTED');
 });
 
 app.io.route('moved', function(req) {
@@ -31,8 +34,17 @@ app.io.route('moved', function(req) {
             players[i].y = req.data.y;
         }
     }
-    app.io.broadcast('playerInfo', players);
 });
 
-
 app.listen(8080);
+
+// Temporary server-side broadcast loop.
+
+function resp() {
+    setTimeout(function() {
+        app.io.broadcast('playerInfo', players);
+        resp();
+    }, 300);
+}
+
+resp();
