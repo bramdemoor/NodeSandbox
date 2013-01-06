@@ -17,10 +17,9 @@ $(function() {
         };
 
         self.updateAnimationFrame = function() {
-            if (self.physics.goalx > 0) self.sprite.scaleX = 1;
-            if (self.physics.goalx < 0) self.sprite.scaleX = -1;
+            self.sprite.scaleX = self.physics.goalDir;
 
-            if (self.physics.goalx != 0) {
+            if (self.physics.goalDir != 0) {
                 if (self.sprite.frame % 3 == 0) {
                     self.pose++;
                     self.pose %= 2;

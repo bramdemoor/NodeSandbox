@@ -35,6 +35,7 @@ $(function() {
         self.centerx = 0;
         self.centery = 0;
         self.dest = undefined;
+        self.goalDir = 1;           // Direction the object wants to move in (-1 = left, 1 = right)
 
         /// Get the X-result of our calculation. To be called after update.
         self.getX = function() {
@@ -76,10 +77,16 @@ $(function() {
             if (App.GameEngine.Game.input.left) self.goalx -= GOAL_INC_HORIZONTAL;
             if (App.GameEngine.Game.input.right) self.goalx += GOAL_INC_HORIZONTAL;
 
+            self.goalDir = self.goalx == 0 ? self.goalDir : (self.goalx > 0 ? 1 : -1);  // Not walking? Keep current. Otherwise, switch.
+
             self.incx += self.goalx + self.horizontalFriction;
+
+            // Apply gravity
             self.incy += self.goaly + GRAVITY;
 
-            self.limitSpeed();
+            // Limit speed
+            self.incx = Math.min(Math.max(self.incx, -MAX_SPEED_HORIZONTAL), MAX_SPEED_HORIZONTAL);
+            self.incy = Math.min(Math.max(self.incy, -MAX_SPEED_VERTICAL), MAX_SPEED_VERTICAL);
 
             self.updateBoundingBox();
 
@@ -217,11 +224,6 @@ $(function() {
             var w = self.spriteWidth - (OFFSET_X * 2);
             var h = self.spriteHeight - OFFSET_Y;
             dest = new App.GameEngine.Rectangle(x, y, w, h);
-        };
-
-        self.limitSpeed = function() {
-            self.incx = Math.min(Math.max(self.incx, -MAX_SPEED_HORIZONTAL), MAX_SPEED_HORIZONTAL);
-            self.incy = Math.min(Math.max(self.incy, -MAX_SPEED_VERTICAL), MAX_SPEED_VERTICAL);
         };
     };
 
