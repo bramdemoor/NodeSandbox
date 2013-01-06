@@ -13,14 +13,15 @@ $(function() {
             self.physics.update(self.sprite.x, self.sprite.y);
             self.sprite.x = self.physics.getX();
             self.sprite.y = self.physics.getY();
-            self.updateAnimationFrame();
+            self.nameLabel.x = self.physics.getX() - 2;
+            self.nameLabel.y = self.physics.getY() - 20;
         };
 
-        self.updateAnimationFrame = function() {
-            self.sprite.scaleX = self.physics.goalDir;
+        self.onWantsToMove = function() {
+            self.sprite.scaleX = self.physics.goalDir == 0 ? self.sprite.scaleX : self.physics.goalDir;
 
             if (self.physics.goalDir != 0) {
-                if (self.sprite.frame % 3 == 0) {
+                if (App.GameEngine.Game.frame % 3 == 0) {
                     self.pose++;
                     self.pose %= 2;
                 }
@@ -56,8 +57,6 @@ $(function() {
         self.spawn = function (spawnpoint) {
             self.sprite.x = spawnpoint.x;
             self.sprite.y = spawnpoint.y;
-            self.nameLabel.x = spawnpoint.x - 2;
-            self.nameLabel.y = spawnpoint.y - 20;
             self.sprite.frame = 0;
 
             App.GameEngine.Stage.addChild(self.sprite);

@@ -28,7 +28,7 @@ $(function() {
         self.incx = 0;
         self.incy = 0;
         self.jumpBoost = 0;
-        self.jumping = false;
+        self.jumping = true;
         self.horizontalFriction = 0;
         self.boundary = 0;
         self.crossing = 0;
@@ -51,11 +51,6 @@ $(function() {
             return App.GameEngine.Map.hitTest(x, y);
         };
 
-        self.resetForUpdate = function() {
-            self.goalx = 0;
-            self.jumping = true;
-        };
-
         self.update = function(currentX, currentY) {
             self.currentX = currentX;
             self.currentY = currentY;
@@ -72,16 +67,20 @@ $(function() {
                 }
             }
 
-            self.resetForUpdate();
+            self.goalx = 0;
+            self.jumping = true;
 
             if (App.GameEngine.Game.input.left) self.goalx -= GOAL_INC_HORIZONTAL;
             if (App.GameEngine.Game.input.right) self.goalx += GOAL_INC_HORIZONTAL;
 
-            self.goalDir = self.goalx == 0 ? self.goalDir : (self.goalx > 0 ? 1 : -1);  // Not walking? Keep current. Otherwise, switch.
+            // Not walking? Keep current. Otherwise, switch direction.
+            self.goalDir = self.goalx == 0 ? 0 : (self.goalx > 0 ? 1 : -1);
+
+            self.player.onWantsToMove(self.goalx);
 
             self.incx += self.goalx + self.horizontalFriction;
 
-            // Apply gravity
+            // Apply vertical goal (= jump force) + gravity
             self.incy += self.goaly + GRAVITY;
 
             // Limit speed
