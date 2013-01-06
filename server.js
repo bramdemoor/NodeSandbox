@@ -50,7 +50,7 @@ function resp() {
     setTimeout(function() {
         app.io.broadcast('playerInfo', players);
         resp();
-    }, 400);
+    }, 5);
 }
 
 resp();

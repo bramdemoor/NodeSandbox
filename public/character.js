@@ -1,6 +1,6 @@
 $(function() {
     App.PlayerCharacter = function(name) {
-        var SYNC_SKIP = 25; // Sync every x frames
+        var SYNC_SKIP = 5; // Sync every x frames
 
         var self = this;
 
