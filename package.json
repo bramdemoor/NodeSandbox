@@ -1,0 +1,14 @@
+{
+  "name": "Sandbox",
+  "subdomain": "bdm.sandbox",
+  "scripts": {
+    "start": "server.js"
+  },
+  "version": "0.0.1-9",
+  "engines": {
+    "node": "0.8.x"
+  },
+  "dependencies": {
+    "socket.io": "0.9.3"
+  }
+}
