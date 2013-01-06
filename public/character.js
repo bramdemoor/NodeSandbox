@@ -30,7 +30,7 @@ $(function() {
             self.scrollView();
 
             if(self.syncCounter == SYNC_SKIP) {
-                App.socket.emit('moved', { x: self.sprite.x, y: self.sprite.y });
+                App.socket.emit('moved', { name: self.name, x: self.sprite.x, y: self.sprite.y });
                 self.syncCounter = 0;
             } else {
                 self.syncCounter++;

@@ -27,6 +27,31 @@ $(function() {
             App.GameEngine.Player.spawn();
             App.socket.emit('join', { name: self.localPlayerName() });
         };
+        self.updPlayer = function(src, dest) {
+            dest.name = src.name;
+            dest.x = src.x;
+            dest.y = src.y;
+            dest.isLocal = ko.observable(true);
+            dest.score = ko.observable(0);
+            dest.health = ko.observable(100);
+            return dest;
+        };
+        self.updatePlayers = function(players) {
+            for(var i = 0; i<players.length; i++) {
+                var p = players[i];
+                var foundPlayer = false;
+                for(var j = 0; j<self.characters().length; j++) {
+                    var ch = self.characters()[j];
+                    if(ch.name === p.name) {
+                        self.updPlayer(p,ch);
+                        foundPlayer = true;
+                    }
+                }
+                if(foundPlayer == false) {
+                    self.characters.push(self.updPlayer(p,{ }));
+                }
+            }
+        };
     };
 });
 

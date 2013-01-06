@@ -15,13 +15,24 @@ app.get('/activeLevel', function(req, res) {
     });
 });
 
-app.io.route('drawClick', function(req) {
-    console.log(req.data);
-    app.io.broadcast('draw')
-});
+var players = [];
 
 app.io.route('join', function(req) {
-    console.log(req.data);
+    players.push({ name : req.data.name, x: 0, y: 0 });
+    console.log('Player joined: ' + req.data.name);
+    req.io.emit('joinSuccess', req.data)
+    app.io.broadcast('playerInfo', players);
 });
+
+app.io.route('moved', function(req) {
+    for(var i = 0; i < players.length; i++) {
+        if(players[i].name == req.data.name) {
+            players[i].x = req.data.x;
+            players[i].y = req.data.y;
+        }
+    }
+    app.io.broadcast('playerInfo', players);
+});
+
 
 app.listen(8080);
