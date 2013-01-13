@@ -76,7 +76,12 @@ fs.readFile(__dirname + '/data/level1.json', 'utf8', function (err, data) {
 
     var upd = function() {
         game._tick(new Date().getTime());
-        app.io.broadcast('playerInfo', players);
+
+        if(players.length > 0) {
+            app.io.broadcast('playerInfo', players);
+        }
+
+
         setTimeout(upd, 100);
     };
 
