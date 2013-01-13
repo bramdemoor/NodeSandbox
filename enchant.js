@@ -868,6 +868,9 @@ enchant.Map = enchant.Class.create(enchant.Entity, {
 
         enchant.Entity.call(this);
 
+		// TODO BDM: Remove hardcoded stuff
+		this.width = 320;
+		this.height = 200;		
         this._tileWidth = tileWidth || 0;
         this._tileHeight = tileHeight || 0;
         this._image = null;
@@ -904,8 +907,8 @@ enchant.Map = enchant.Class.create(enchant.Entity, {
         if (x < 0 || this.width <= x || y < 0 || this.height <= y) {
             return false;
         }
-        var width = this._image.width;
-        var height = this._image.height;
+        var width = this.width;
+        var height = this.height;
         var tileWidth = this._tileWidth || width;
         var tileHeight = this._tileHeight || height;
         x = x / tileWidth | 0;
@@ -918,8 +921,8 @@ enchant.Map = enchant.Class.create(enchant.Entity, {
         if (x < 0 || this.width <= x || y < 0 || this.height <= y) {
             return false;
         }
-        var width = this._image.width;
-        var height = this._image.height;
+        var width = this.width;
+        var height = this.height;
         var tileWidth = this._tileWidth || width;
         var tileHeight = this._tileHeight || height;
         x = x / tileWidth | 0;
