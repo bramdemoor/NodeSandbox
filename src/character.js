@@ -1,5 +1,8 @@
-    PlayerCharacter = function(socketid, name) {
+    PlayerCharacter = function(socketid, name, stage, map) {
         var self = this;
+
+        self.stage = stage;
+        self.map = map;
 
         self.name = name;
         self.sprite = new enchant.Sprite(32, 32);
@@ -12,7 +15,6 @@
         self.leftPressed = false;
         self.rightPressed = false;
         self.syncCounter = 0;
-        self.map = undefined;
 
         self.getFlat = function() {
             return {
@@ -48,6 +50,12 @@
 
         self.onJump = function() {  };
 
+        self.onCollideLeft = function() { };
+
+        self.onCollideRight = function() { };
+
+        self.onCollideTop = function() { };
+
         self.onCollideFloor = function(crossing, boundary) {
             if(map.checkTile(crossing, boundary) == 10) {
                 // Spikes!!!
@@ -74,17 +82,15 @@
             self.sprite.tl.delay(20).then(function (e) { self.spawn(); });
         };
 
-        self.spawn = function (spawnpoint, stage, map) {
-            self.map = map;
+        self.spawn = function (spawnpoint) {
             self.sprite.x = spawnpoint.x;
             self.sprite.y = spawnpoint.y;
 
             self.health = 100;
 
-            stage.removeChild(self.sprite);
-            stage.addChild(self.sprite);
+            self.stage.addChild(self.sprite);
 
-            self.physics = new Physics(self, 32, 32, map);
+            self.physics = new Physics(self);
 
             self.sprite.addEventListener('enterframe', self.update);
 

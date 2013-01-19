@@ -39,7 +39,6 @@ $(function() {
 
             if(!self.alive) return;
 
-            console.log('update!!');
             self.physics.update(self.sprite.x, self.sprite.y, self.upPressed, self.leftPressed, self.rightPressed);
             self.sprite.x = self.physics.getX();
             self.sprite.y = self.physics.getY();
