@@ -33,11 +33,7 @@ $(function() {
                 var foundPlayer = false;
                 for(var j = 0; j<self.characters().length; j++) {
                     if(self.characters()[j].name === players[i].name) {
-                        if(!self.currentPlayer() || self.currentPlayer().name != self.characters()[j].name) {
-                            // WHY: Don't update the current player!
-                            self.characters()[j].serverUpdate(players[i]);
-                        }
-
+                        self.characters()[j].serverUpdate(players[i]);
                         foundPlayer = true;
                     }
                 }

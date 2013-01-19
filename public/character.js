@@ -21,11 +21,20 @@ $(function() {
         self.syncCounter = 0;
 
         self.serverUpdate = function(src) {
+
+            if(self.isLocal()) {
+                console.log("I'm local.");
+            }
+
+
             self.score(src.score);
             self.health(src.health);
-            self.upPressed = src.upPressed;
-            self.leftPressed = src.leftPressed;
-            self.rightPressed = src.rightPressed;
+
+           /* if(!self.isLocal()) {
+                self.upPressed = src.upPressed;
+                self.leftPressed = src.leftPressed;
+                self.rightPressed = src.rightPressed;
+            }*/
 
             if(self.physics) {
                 self.physics.serverUpdate(src.x, src.y, src.incx, src.incy);
@@ -48,17 +57,19 @@ $(function() {
             self.nameLabel.y = self.physics.getY() - 20;
 
             if(self.isLocal()) {
-                if(self.sprite.y > 320 || self.health() < 1) {
+              /*  if(self.sprite.y > 320 || self.health() < 1) {
                     self.die();
-                }
+                }*/
 
                 self.scrollView();
 
-                App.socket.emit('moved', {
-                    upPressed : self.upPressed,
-                    leftPressed : self.leftPressed,
-                    rightPressed : self.rightPressed
-                });
+                if(inputChanged) {
+                    App.socket.emit('moved', {
+                        upPressed : self.upPressed,
+                        leftPressed : self.leftPressed,
+                        rightPressed : self.rightPressed
+                    });
+                }
             }
         };
 

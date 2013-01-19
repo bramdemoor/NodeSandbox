@@ -18,6 +18,7 @@
 
         self.getFlat = function() {
             return {
+                name:self.name,
                 x:self.sprite.x,
                 y:self.sprite.y,
                 score:self.score,
