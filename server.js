@@ -103,7 +103,9 @@ fs.readFile(__dirname + '/data/level1.json', 'utf8', function (err, data) {
     var getPlayersFlat = function() {
         var data = [];
         for(var i = 0; i < global.players.length; i++) {
-            data.push(global.players[i].getFlat());
+            var p = global.players[i].getFlat();
+            console.log('player: ' + JSON.stringify(p));
+            data.push(p);
         }
         return data;
     };
@@ -115,7 +117,7 @@ fs.readFile(__dirname + '/data/level1.json', 'utf8', function (err, data) {
             app.io.broadcast('playerInfo', getPlayersFlat());
         }
 
-        setTimeout(upd, 100);
+        setTimeout(upd, 1000);
     };
 
     game.start();
