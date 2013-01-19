@@ -3,6 +3,7 @@
 
         self.stage = stage;
         self.map = map;
+        self.socketid = socketid;
 
         self.name = name;
         self.sprite = new enchant.Sprite(32, 32);
@@ -31,16 +32,14 @@
             };
         };
 
-        self.serverUpdate = function(req) {
-            self.upPressed = req.data.upPressed;
-            self.leftPressed = req.data.leftPressed;
-            self.rightPressed = req.data.rightPressed;
+        self.serverUpdate = function(data) {
+            self.upPressed = data.upPressed;
+            self.leftPressed = data.leftPressed;
+            self.rightPressed = data.rightPressed;
         };
 
         self.update = function() {
             if(!self.alive) return;
-
-            console.log(self.rightPressed);
 
             self.physics.update(self.sprite.x, self.sprite.y, self.upPressed, self.leftPressed, self.rightPressed);
             self.sprite.x = self.physics.getX();

@@ -22,19 +22,14 @@ $(function() {
 
         self.serverUpdate = function(src) {
 
-            if(self.isLocal()) {
-                console.log("I'm local.");
-            }
-
-
             self.score(src.score);
             self.health(src.health);
 
-           /* if(!self.isLocal()) {
+            if(!self.isLocal()) {
                 self.upPressed = src.upPressed;
                 self.leftPressed = src.leftPressed;
                 self.rightPressed = src.rightPressed;
-            }*/
+            }
 
             if(self.physics) {
                 self.physics.serverUpdate(src.x, src.y, src.incx, src.incy);

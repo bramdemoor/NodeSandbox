@@ -892,26 +892,16 @@ enchant.Map = enchant.Class.create(enchant.Entity, {
         var tilex = x / this._tileWidth | 0;
         var tiley = y / this._tileHeight | 0;
 
-        var res = this._data[0][tiley][tilex];
-
-        console.log(res);
-
-        return res;
+        return this._data[0][tiley][tilex];
     },
    
     hitTest: function(x, y) {
-        var col = this.checkTile(x, y) != null && this.checkTile(x, y) != -1;
-
-        if(col) {
-            console.log('col!');
-        }
-
-        return col;
+        return this.checkTile(x, y) != null && this.checkTile(x, y) != -1;
     },
 	
-    getWidth: function() { return 9999; },
+    getWidth: function() { return 999; },
 
-    getHeight: function() { return 9999;	}
+    getHeight: function() { return 999;	}
 });
 
 enchant.Group = enchant.Class.create(enchant.Node, {
