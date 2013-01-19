@@ -2,6 +2,8 @@ var fs = require('fs');
 var express = require('express.io');
 require('./enchant.js');
 var app = express();
+require('./src/playerphysics.js');
+require('./src/character.js');
 app.http().io();
 
 // General declarations
