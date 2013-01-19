@@ -12,6 +12,7 @@
         self.leftPressed = false;
         self.rightPressed = false;
         self.syncCounter = 0;
+        self.map = undefined;
 
         self.getFlat = function() {
             return {
@@ -48,10 +49,10 @@
         self.onJump = function() {  };
 
         self.onCollideFloor = function(crossing, boundary) {
-            //if (App.GameEngine.Map.checkTile(crossing, boundary) == 10) {
+            if(map.checkTile(crossing, boundary) == 10) {
                 // Spikes!!!
-            //    self.die();
-            //}
+                self.die();
+            }
         };
 
         self.shoot = function () {
@@ -59,7 +60,6 @@
             var x = self.sprite.x + 10 + (25 * dir);
             var y = self.sprite.y + 10;
           //  new App.Bullet(x, y, dir);
-          //  App.socket.emit('shoot', { name: self.name, x: x, y: y, dir: dir });
         };
 
         self.die = function () {
@@ -74,7 +74,8 @@
             self.sprite.tl.delay(20).then(function (e) { self.spawn(); });
         };
 
-        self.spawn = function (spawnpoint, stage) {
+        self.spawn = function (spawnpoint, stage, map) {
+            self.map = map;
             self.sprite.x = spawnpoint.x;
             self.sprite.y = spawnpoint.y;
 
@@ -83,7 +84,7 @@
             stage.removeChild(self.sprite);
             stage.addChild(self.sprite);
 
-            self.physics = new Physics(self, 32, 32);
+            self.physics = new Physics(self, 32, 32, map);
 
             self.sprite.addEventListener('enterframe', self.update);
 

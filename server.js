@@ -44,7 +44,7 @@ fs.readFile(__dirname + '/data/level1.json', 'utf8', function (err, data) {
         });
         app.io.route('join', function(req) {
             var newPlayer = new PlayerCharacter(req.socket.id, req.data.name);
-            newPlayer.spawn({ x: 100, y:100 }, stage);
+            newPlayer.spawn({ x: 100, y:100 }, stage, map);
             game.rootScene.addChild(newPlayer.sprite);
             global.players.push(newPlayer);
             console.log('Player joined: ' + req.data.name + ' (id: ' + req.socket.id + ')');

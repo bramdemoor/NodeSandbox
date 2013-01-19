@@ -10,10 +10,11 @@ Rectangle = enchant.Class.create({
 });
 
 
-Physics = function(player) {
+Physics = function(player, map) {
 
     var self = this;
     self.player = player;
+    self.map = map;
 
     // Physics Config
     var MAX_SPEED_HORIZONTAL = 10;
@@ -58,8 +59,7 @@ Physics = function(player) {
     };
 
     self.hitTest = function(x,y) {
-       // return App.GameEngine.Map.hitTest(x, y);
-        return false;
+        return map.hitTest(x, y);
     };
 
     self.update = function(currentX, currentY, upPressed, leftPressed, rightPressed) {
