@@ -40,8 +40,6 @@
             self.physics.update(self.sprite.x, self.sprite.y, self.upPressed, self.leftPressed, self.rightPressed);
             self.sprite.x = self.physics.getX();
             self.sprite.y = self.physics.getY();
-
-            console.log('y: ' +  self.sprite.y);
         };
 
         self.onWantsToMove = function() {  };
@@ -73,7 +71,7 @@
 
             self.alive = false;
 
-            self.score(self.score() - 10);
+            self.score -= 10;
 
             self.physics = undefined;   // Destroy this so it will be reset when spawning
 

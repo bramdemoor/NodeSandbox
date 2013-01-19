@@ -9,7 +9,8 @@ app.http().io();
 app.io.set('log level', 1);     // Disable verbose log messages
 
 // General declarations
-global.activeLevel = [];
+global.activeLevelString = '';
+global.activeLevel = undefined;
 global.players = [];
 
 // Prepare for web requests
@@ -19,8 +20,8 @@ app.use(express.static(__dirname + '/public/css'));
 
 // Load our level
 fs.readFile(__dirname + '/data/level1.json', 'utf8', function (err, data) {
-
-    activeLevel = data;
+    global.activeLevelString = data;
+    global.activeLevel = JSON.parse(data).blocks;
 
     enchant();
 
@@ -28,9 +29,10 @@ fs.readFile(__dirname + '/data/level1.json', 'utf8', function (err, data) {
     game.fps = 30;
     game.onload = function() {
         var map = new enchant.Map(16, 16);
+
         map.loadData(global.activeLevel);
-        map.tileWidth = 32;
-        map.tileHeight= 32;
+
+        console.log(map._data);
 
         var stage = new enchant.Group();
         game.rootScene.addChild(stage);
@@ -40,9 +42,10 @@ fs.readFile(__dirname + '/data/level1.json', 'utf8', function (err, data) {
 
         app.get('/activeLevel', function(req, res) {
             res.setHeader('Content-Type', 'text/json');
-            res.setHeader('Content-Length', global.activeLevel.length);
-            res.end(global.activeLevel);
+            res.setHeader('Content-Length', global.activeLevelString.length);
+            res.end(global.activeLevelString);
         });
+
         app.io.route('join', function(req) {
             var newPlayer = new PlayerCharacter(req.socket.id, req.data.name, stage, map);
             newPlayer.spawn({ x: 100, y:100 });

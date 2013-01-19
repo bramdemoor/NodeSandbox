@@ -57,7 +57,8 @@ Physics = function(player) {
     };
 
     self.hitTest = function(x,y) {
-        return self.player.map.hitTest(x, y);
+        var col = self.player.map.hitTest(x, y);
+        return col;
     };
 
     self.update = function(currentX, currentY, upPressed, leftPressed, rightPressed) {

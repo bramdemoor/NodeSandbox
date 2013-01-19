@@ -862,119 +862,60 @@ enchant.Sprite = enchant.Class.create(enchant.Entity, {
 });
 
 enchant.Map = enchant.Class.create(enchant.Entity, {
-
+  
     initialize: function(tileWidth, tileHeight) {
         var core = enchant.Core.instance;
-
         enchant.Entity.call(this);
-
-		// TODO BDM: Remove hardcoded stuff
-		this.width = 320;
-		this.height = 200;		
-        this._tileWidth = tileWidth || 0;
-        this._tileHeight = tileHeight || 0;
-        this._image = null;
-        this._data = [[[]]];
-        this._dirty = false;
-        this._tight = false;
-        this.touchEnabled = false;
-        this.collisionData = null;
-    },
-
+        this._tileWidth = 32;
+        this._tileHeight = 32;
+		this._data = [[[]]];
+	},
+    
     loadData: function(data) {
         this._data = Array.prototype.slice.apply(arguments);
-        this._dirty = true;
 
-        this._tight = false;
         for (var i = 0, len = this._data.length; i < len; i++) {
             var c = 0;
             data = this._data[i];
             for (var y = 0, l = data.length; y < l; y++) {
                 for (var x = 0, ll = data[y].length; x < ll; x++) {
-                    if (data[y][x] >= 0) {
-                        c++;
-                    }
+                    if (data[y][x] >= 0) {  c++; }
                 }
             }
-            if (c / (data.length * data[0].length) > 0.2) {
-                this._tight = true;
-                break;
-            }
+            if (c / (data.length * data[0].length) > 0.2) { break; }
         }
     },
-
+   
     checkTile: function(x, y) {
-        if (x < 0 || this.width <= x || y < 0 || this.height <= y) {
-            return false;
-        }
-        var width = this.width;
-        var height = this.height;
-        var tileWidth = this._tileWidth || width;
-        var tileHeight = this._tileHeight || height;
-        x = x / tileWidth | 0;
-        y = y / tileHeight | 0;
-        var data = this._data[0];
-        return data[y][x];
-    },
+        if (x < 0 || this.getWidth() <= x || y < 0 || this.getHeight() <= y) { return false; }
 
+        var tilex = x / this._tileWidth | 0;
+        var tiley = y / this._tileHeight | 0;
+		
+        return this._data[0][tiley][tilex];
+    },
+   
     hitTest: function(x, y) {
-        if (x < 0 || this.width <= x || y < 0 || this.height <= y) {
-            return false;
-        }
-        var width = this.width;
-        var height = this.height;
-        var tileWidth = this._tileWidth || width;
-        var tileHeight = this._tileHeight || height;
-        x = x / tileWidth | 0;
-        y = y / tileHeight | 0;
-        if (this.collisionData != null) {
-            return this.collisionData[y] && !!this.collisionData[y][x];
-        } else {
-            for (var i = 0, len = this._data.length; i < len; i++) {
-                var data = this._data[i];
-                var n;
-                if (data[y] != null && (n = data[y][x]) != null &&
-                    0 <= n && n < (width / tileWidth | 0) * (height / tileHeight | 0)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-    },
+        if (x < 0 || this.getWidth() <= x || y < 0 || this.getHeight() <= y) { return false; }
 
-    tileWidth: {
-        get: function() {
-            return this._tileWidth;
-        },
-        set: function(tileWidth) {
-            this._tileWidth = tileWidth;
-            this._dirty = true;
-        }
-    },
+        var tilex = x / this._tileWidth | 0;
+        var tiley = y / this._tileHeight | 0;
 
-    tileHeight: {
-        get: function() {
-            return this._tileHeight;
-        },
-        set: function(tileHeight) {
-            this._tileHeight = tileHeight;
-            this._dirty = true;
-        }
-    },
+        console.log(this._data);
 
-    width: {
-        get: function() {
-            return this._tileWidth * this._data[0][0].length;
-        }
+		for (var i = 0; i < this._data.length; i++) {
+            console.log('check tile ' + i);
+			if (this._data[i][tiley] != null && this._data[i][tiley][tilex] != null) {
+				return true;
+			}
+		}
+		return false;
     },
+	
+    getWidth: function() { return 9999; },
 
-    height: {
-        get: function() {
-            return this._tileHeight * this._data[0].length;
-        }
-    }
+    getHeight: function() { return 9999;	}
 });
-
 
 enchant.Group = enchant.Class.create(enchant.Node, {
 
