@@ -1,35 +1,30 @@
-    PlayerCharacter = function(name) {
+    PlayerCharacter = function(socketid, name) {
         var self = this;
 
         self.name = name;
-        self.sprite = new Sprite(32, 32);
-        self.nameLabel = new Label(self.name);
+        self.sprite = new enchant.Sprite(32, 32);
         self.pose = 0;
         self.physics = undefined;
         self.alive = false;
-        self.isLocal = ko.observable(false);
-        self.score = ko.observable(0);
-        self.health = ko.observable(100);
-
-        // controls
+        self.isLocal = false;
+        self.score = 0;
+        self.health = 100;
         self.upPressed = false;
         self.leftPressed = false;
         self.rightPressed = false;
-
         self.syncCounter = 0;
 
-        self.serverUpdate = function(src) {
-            self.sprite.x = src.x;
-            self.sprite.y = src.y;
-            self.score(src.score);
-            self.health(src.health);
-            self.upPressed = src.upPressed;
-            self.leftPressed = src.leftPressed;
-            self.rightPressed = src.rightPressed;
+        self.serverUpdate = function(req) {
+            self.sprite.x = req.data.x;
+            self.sprite.y = req.data.y;
+            self.health = req.data.health;
+            self.score = req.data.score;
+            self.upPressed = req.data.upPressed;
+            self.leftPressed = req.data.leftPressed;
+            self.rightPressed = req.data.rightPressed;
         };
 
         self.update = function() {
-
             var inputChanged = false;
             if(self.isLocal()) {
                 inputChanged = self.handleKeys();
@@ -37,7 +32,6 @@
 
             if(!self.alive) return;
 
-            console.log('update!!');
             self.physics.update(self.sprite.x, self.sprite.y, self.upPressed, self.leftPressed, self.rightPressed);
             self.sprite.x = self.physics.getX();
             self.sprite.y = self.physics.getY();

@@ -28,8 +28,8 @@ fs.readFile(__dirname + '/data/level1.json', 'utf8', function (err, data) {
         var map = new enchant.Map(16, 16);
         map.loadData(global.activeLevel);
 
-        var testTile = map.checkTile(11, 0) == 4;
-        console.log('map loaded. Test: tile at x,y is: ' + testTile);
+      /*  var testTile = map.checkTile(11, 0) == 4;
+        console.log('map loaded. Test: tile at x,y is: ' + testTile);*/
 
         var stage = new enchant.Group();
         game.rootScene.addChild(stage);
@@ -42,9 +42,8 @@ fs.readFile(__dirname + '/data/level1.json', 'utf8', function (err, data) {
             res.setHeader('Content-Length', global.activeLevel.length);
             res.end(global.activeLevel);
         });
-
         app.io.route('join', function(req) {
-            global.players.push({ socketid: req.socket.id, name : req.data.name, x: 0, y: 0, health: 100, score: 0, upPressed: false, leftPressed: false, rightPressed: false });
+            global.players.push(new PlayerCharacter(req.socket.id, req.data.name));
             console.log('Player joined: ' + req.data.name + ' (id: ' + req.socket.id + ')');
             req.io.emit('joinSuccess', req.data)
         });
@@ -62,13 +61,7 @@ fs.readFile(__dirname + '/data/level1.json', 'utf8', function (err, data) {
         app.io.route('moved', function(req) {
             for(var i = 0; i < players.length; i++) {
                 if(global.players[i].socketid == req.socket.id) {
-                    global.players[i].x = req.data.x;
-                    global.players[i].y = req.data.y;
-                    global.players[i].health = req.data.health;
-                    global.players[i].score = req.data.score;
-                    global.players[i].upPressed = req.data.upPressed;
-                    global.players[i].leftPressed = req.data.leftPressed;
-                    global.players[i].rightPressed = req.data.rightPressed;
+                    global.players[i].serverUpdate(req.data);
                 }
             }
         });
@@ -82,18 +75,34 @@ fs.readFile(__dirname + '/data/level1.json', 'utf8', function (err, data) {
         upd();
     };
 
+    var getPlayersFlat = function() {
+        var data = [];
+        for(var i = 0; i < global.players.length; i++) {
+            var p = global.players[i];
+            data.push({
+                x:p.sprite.x,
+                y:p.sprite.y,
+                score:p.score,
+                health:p.health,
+                upPressed:p.upPressed,
+                leftPressed:p.leftPressed,
+                rightPressed:p.rightPressed
+            });
+        }
+        return data;
+    };
+
     var upd = function() {
         game._tick(new Date().getTime());
 
         if(players.length > 0) {
-            app.io.broadcast('playerInfo', players);
+            app.io.broadcast('playerInfo', getPlayersFlat());
         }
 
         setTimeout(upd, 100);
     };
 
     game.start();
-
 
 });
 
