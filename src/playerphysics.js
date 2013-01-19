@@ -1,3 +1,15 @@
+Rectangle = enchant.Class.create({
+    initialize: function (x, y, width, height) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+    },
+    right: { get: function () { return this.x + this.width; } },
+    bottom: { get: function () { return this.y + this.height; } }
+});
+
+
 Physics = function(player) {
 
     var self = this;
@@ -224,7 +236,7 @@ Physics = function(player) {
         var y = self.currentY + self.incy + OFFSET_Y;
         var w = (CHARACTER_WIDTH_HALF * 2) - (OFFSET_X * 2);
         var h = (CHARACTER_HEIGHT_HALF * 2) - OFFSET_Y;
-        self.dest = new App.GameEngine.Rectangle(x, y, w, h);
+        self.dest = new Rectangle(x, y, w, h);
     };
 };
 

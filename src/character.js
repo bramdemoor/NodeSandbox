@@ -6,7 +6,6 @@
         self.pose = 0;
         self.physics = undefined;
         self.alive = false;
-        self.isLocal = false;
         self.score = 0;
         self.health = 100;
         self.upPressed = false;
@@ -33,34 +32,20 @@
         };
 
         self.update = function() {
+            console.log('player update');
+
             var inputChanged = false;
-            if(self.isLocal()) {
-                inputChanged = self.handleKeys();
-            }
 
             if(!self.alive) return;
 
             self.physics.update(self.sprite.x, self.sprite.y, self.upPressed, self.leftPressed, self.rightPressed);
             self.sprite.x = self.physics.getX();
             self.sprite.y = self.physics.getY();
-            self.nameLabel.x = self.physics.getX() - 2;
-            self.nameLabel.y = self.physics.getY() - 20;
         };
 
-        self.onWantsToMove = function() {
-            self.sprite.scaleX = self.physics.goalDir == 0 ? self.sprite.scaleX : self.physics.goalDir;
+        self.onWantsToMove = function() {  };
 
-            if (self.physics.goalDir != 0) {
-
-                self.sprite.frame = self.pose + 1;
-            } else {
-                self.sprite.frame = 0;
-            }
-        };
-
-        self.onJump = function() {
-
-        };
+        self.onJump = function() {  };
 
         self.onCollideFloor = function(crossing, boundary) {
             //if (App.GameEngine.Map.checkTile(crossing, boundary) == 10) {
@@ -89,26 +74,20 @@
             self.sprite.tl.delay(20).then(function (e) { self.spawn(); });
         };
 
-        self.spawn = function () {
-         /*   var spawnpoint = App.GameEngine.getSpawnPoint();
-
+        self.spawn = function (spawnpoint, stage) {
             self.sprite.x = spawnpoint.x;
             self.sprite.y = spawnpoint.y;
-            self.sprite.frame = 0;
 
-            self.health(100);
+            self.health = 100;
 
-            App.GameEngine.Stage.removeChild(self.sprite);
-            App.GameEngine.Stage.removeChild(self.nameLabel);
+            stage.removeChild(self.sprite);
+            stage.addChild(self.sprite);
 
-            App.GameEngine.Stage.addChild(self.sprite);
-            App.GameEngine.Stage.addChild(self.nameLabel);
-
-            self.physics = new App.Physics(self, 32, 32);
+            self.physics = new Physics(self, 32, 32);
 
             self.sprite.addEventListener('enterframe', self.update);
 
-            self.alive = true;*/
+            self.alive = true;
         };
-    }
+    };
 
