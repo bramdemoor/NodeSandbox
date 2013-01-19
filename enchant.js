@@ -868,7 +868,7 @@ enchant.Map = enchant.Class.create(enchant.Entity, {
         enchant.Entity.call(this);
         this._tileWidth = 32;
         this._tileHeight = 32;
-		this._data = [[[]]];
+		this._data = [[[]]];        // 3 dimensions
 	},
     
     loadData: function(data) {
@@ -884,6 +884,9 @@ enchant.Map = enchant.Class.create(enchant.Entity, {
             }
             if (c / (data.length * data[0].length) > 0.2) { break; }
         }
+
+        console.log('data:');
+        console.log(this._data);
     },
    
     checkTile: function(x, y) {
@@ -891,25 +894,22 @@ enchant.Map = enchant.Class.create(enchant.Entity, {
 
         var tilex = x / this._tileWidth | 0;
         var tiley = y / this._tileHeight | 0;
-		
-        return this._data[0][tiley][tilex];
+
+        var res = this._data[0][tiley][tilex];
+
+        console.log(res);
+
+        return res;
     },
    
     hitTest: function(x, y) {
-        if (x < 0 || this.getWidth() <= x || y < 0 || this.getHeight() <= y) { return false; }
+        var col = this.checkTile(x, y) != null && this.checkTile(x, y) != -1;
 
-        var tilex = x / this._tileWidth | 0;
-        var tiley = y / this._tileHeight | 0;
+        if(col) {
+            console.log('col!');
+        }
 
-        console.log(this._data);
-
-		for (var i = 0; i < this._data.length; i++) {
-            console.log('check tile ' + i);
-			if (this._data[i][tiley] != null && this._data[i][tiley][tilex] != null) {
-				return true;
-			}
-		}
-		return false;
+        return col;
     },
 	
     getWidth: function() { return 9999; },
