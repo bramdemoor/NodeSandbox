@@ -54,17 +54,10 @@ $(function() {
                 self.scrollView();
 
                 App.socket.emit('moved', {
-                    name: self.name,
-                    x: self.sprite.x,
-                    y: self.sprite.y,
-                    score: self.score(),
-                    health : self.health(),
                     upPressed : self.upPressed,
                     leftPressed : self.leftPressed,
                     rightPressed : self.rightPressed
                 });
-
-
             }
         };
 

@@ -78,16 +78,7 @@ fs.readFile(__dirname + '/data/level1.json', 'utf8', function (err, data) {
     var getPlayersFlat = function() {
         var data = [];
         for(var i = 0; i < global.players.length; i++) {
-            var p = global.players[i];
-            data.push({
-                x:p.sprite.x,
-                y:p.sprite.y,
-                score:p.score,
-                health:p.health,
-                upPressed:p.upPressed,
-                leftPressed:p.leftPressed,
-                rightPressed:p.rightPressed
-            });
+            data.push(global.players[i].getFlat());
         }
         return data;
     };

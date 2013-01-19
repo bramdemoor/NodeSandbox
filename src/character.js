@@ -14,11 +14,19 @@
         self.rightPressed = false;
         self.syncCounter = 0;
 
+        self.getFlat = function() {
+            return {
+                x:self.sprite.x,
+                y:self.sprite.y,
+                score:self.score,
+                health:self.health,
+                upPressed:self.upPressed,
+                leftPressed:self.leftPressed,
+                rightPressed:self.rightPressed
+            };
+        };
+
         self.serverUpdate = function(req) {
-            self.sprite.x = req.data.x;
-            self.sprite.y = req.data.y;
-            self.health = req.data.health;
-            self.score = req.data.score;
             self.upPressed = req.data.upPressed;
             self.leftPressed = req.data.leftPressed;
             self.rightPressed = req.data.rightPressed;
