@@ -1,10 +1,8 @@
     PlayerCharacter = function(socketid, name, stage, map) {
         var self = this;
-
         self.stage = stage;
         self.map = map;
         self.socketid = socketid;
-
         self.name = name;
         self.sprite = new enchant.Sprite(32, 32);
         self.pose = 0;
@@ -41,6 +39,10 @@
         self.update = function() {
             if(!self.alive) return;
 
+            if(self.sprite.y > 320 || self.health < 1) {
+                self.die();
+            }
+
             self.physics.update(self.sprite.x, self.sprite.y, self.upPressed, self.leftPressed, self.rightPressed);
             self.sprite.x = self.physics.getX();
             self.sprite.y = self.physics.getY();
@@ -71,29 +73,22 @@
         };
 
         self.die = function () {
-            self.health(0);
-
+            self.health = 0;
             self.alive = false;
-
             self.score -= 10;
-
             self.physics = undefined;   // Destroy this so it will be reset when spawning
-
-            self.sprite.tl.delay(20).then(function (e) { self.spawn(); });
+            self.sprite.tl.delay(20).then(function (e) { self.spawn({ x: 100, y: 100}); });
+            // App.socket.emit('died', { });
         };
 
         self.spawn = function (spawnpoint) {
             self.sprite.x = spawnpoint.x;
             self.sprite.y = spawnpoint.y;
-
             self.health = 100;
-
             self.stage.addChild(self.sprite);
-
             self.physics = new Physics(self);
-
             self.sprite.addEventListener('enterframe', self.update);
-
+            //App.socket.emit('spawned', { });
             self.alive = true;
         };
     };

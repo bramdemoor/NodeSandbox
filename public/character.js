@@ -52,10 +52,6 @@ $(function() {
             self.nameLabel.y = self.physics.getY() - 20;
 
             if(self.isLocal()) {
-              /*  if(self.sprite.y > 320 || self.health() < 1) {
-                    self.die();
-                }*/
-
                 self.scrollView();
 
                 if(inputChanged) {
@@ -118,34 +114,23 @@ $(function() {
 
         self.onCollideTop = function() { };
 
-        self.onCollideFloor = function(crossing, boundary) {
-            if (App.GameEngine.Map.checkTile(crossing, boundary) == 10) {
-                // Spikes!!!
-                 self.die();
-            }
-        };
+        self.onCollideFloor = function(crossing, boundary) {  };
 
         self.shoot = function () {
             var dir = self.sprite.scaleX;
             var x = self.sprite.x + 10 + (25 * dir);
             var y = self.sprite.y + 10;
             new App.Bullet(x, y, dir);
-            App.socket.emit('shoot', { name: self.name, x: x, y: y, dir: dir });
+          //  App.socket.emit('shoot', { name: self.name, x: x, y: y, dir: dir });
         };
 
         self.die = function () {
             self.health(0);
-
             self.alive = false;
             App.GameEngine.Game.assets['../wav/gameover.wav'].play();
             self.sprite.frame = 3;
-
             self.score(self.score() - 10);
-
             self.physics = undefined;   // Destroy this so it will be reset when spawning
-
-            App.socket.emit('died', { });
-
             self.sprite.tl.delay(20).then(function (e) { self.spawn(); });
         };
 
@@ -155,21 +140,13 @@ $(function() {
             self.sprite.x = spawnpoint.x;
             self.sprite.y = spawnpoint.y;
             self.sprite.frame = 0;
-
             self.health(100);
-
             App.GameEngine.Stage.removeChild(self.sprite);
             App.GameEngine.Stage.removeChild(self.nameLabel);
-
             App.GameEngine.Stage.addChild(self.sprite);
             App.GameEngine.Stage.addChild(self.nameLabel);
-
             self.physics = new App.Physics(self, 32, 32);
-
             self.sprite.addEventListener('enterframe', self.update);
-
-            App.socket.emit('spawned', { });
-
             self.alive = true;
         };
     }
