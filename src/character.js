@@ -35,15 +35,13 @@
         };
 
         self.update = function() {
-            console.log('player update');
-
-            var inputChanged = false;
-
             if(!self.alive) return;
 
             self.physics.update(self.sprite.x, self.sprite.y, self.upPressed, self.leftPressed, self.rightPressed);
             self.sprite.x = self.physics.getX();
             self.sprite.y = self.physics.getY();
+
+            console.log('y: ' +  self.sprite.y);
         };
 
         self.onWantsToMove = function() {  };

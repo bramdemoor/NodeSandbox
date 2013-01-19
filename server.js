@@ -6,6 +6,8 @@ require('./src/playerphysics.js');
 require('./src/character.js');
 app.http().io();
 
+app.io.set('log level', 1);     // Disable verbose log messages
+
 // General declarations
 global.activeLevel = [];
 global.players = [];
@@ -27,9 +29,8 @@ fs.readFile(__dirname + '/data/level1.json', 'utf8', function (err, data) {
     game.onload = function() {
         var map = new enchant.Map(16, 16);
         map.loadData(global.activeLevel);
-
-      /*  var testTile = map.checkTile(11, 0) == 4;
-        console.log('map loaded. Test: tile at x,y is: ' + testTile);*/
+        map.tileWidth = 32;
+        map.tileHeight= 32;
 
         var stage = new enchant.Group();
         game.rootScene.addChild(stage);

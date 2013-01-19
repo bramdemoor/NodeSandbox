@@ -82,9 +82,6 @@ Physics = function(player) {
         if (leftPressed) self.goalx -= GOAL_INC_HORIZONTAL;
         if (rightPressed) self.goalx += GOAL_INC_HORIZONTAL;
 
-        // Not walking? Keep current. Otherwise, switch direction.
-        self.goalDir = self.goalx == 0 ? 0 : (self.goalx > 0 ? 1 : -1);
-
         self.player.onWantsToMove();
 
         self.incx += self.goalx + self.horizontalFriction;
