@@ -884,9 +884,6 @@ enchant.Map = enchant.Class.create(enchant.Entity, {
             }
             if (c / (data.length * data[0].length) > 0.2) { break; }
         }
-
-        console.log('data:');
-        console.log(this._data);
     },
    
     checkTile: function(x, y) {
