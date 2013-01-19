@@ -117,7 +117,7 @@ fs.readFile(__dirname + '/data/level1.json', 'utf8', function (err, data) {
             app.io.broadcast('playerInfo', getPlayersFlat());
         }
 
-        setTimeout(upd, 1000);
+        setTimeout(upd, 100);
     };
 
     game.start();

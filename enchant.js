@@ -866,8 +866,8 @@ enchant.Map = enchant.Class.create(enchant.Entity, {
     initialize: function(tileWidth, tileHeight) {
         var core = enchant.Core.instance;
         enchant.Entity.call(this);
-        this._tileWidth = 32;
-        this._tileHeight = 32;
+        this._tileWidth = tileWidth;
+        this._tileHeight = tileHeight;
 		this._data = [[[]]];        // 3 dimensions
 	},
     

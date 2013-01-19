@@ -24,7 +24,9 @@
                 health:self.health,
                 upPressed:self.upPressed,
                 leftPressed:self.leftPressed,
-                rightPressed:self.rightPressed
+                rightPressed:self.rightPressed,
+                incx: self.physics.incx,
+                incy: self.physics.incy
             };
         };
 

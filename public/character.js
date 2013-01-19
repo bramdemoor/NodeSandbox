@@ -21,13 +21,15 @@ $(function() {
         self.syncCounter = 0;
 
         self.serverUpdate = function(src) {
-            self.sprite.x = src.x;
-            self.sprite.y = src.y;
             self.score(src.score);
             self.health(src.health);
             self.upPressed = src.upPressed;
             self.leftPressed = src.leftPressed;
             self.rightPressed = src.rightPressed;
+
+            if(self.physics) {
+                self.physics.serverUpdate(src.x, src.y, src.incx, src.incy);
+            }
         };
 
         self.update = function() {
@@ -39,7 +41,7 @@ $(function() {
 
             if(!self.alive) return;
 
-            self.physics.update(self.sprite.x, self.sprite.y, self.upPressed, self.leftPressed, self.rightPressed);
+            self.physics.update(self.upPressed, self.leftPressed, self.rightPressed);
             self.sprite.x = self.physics.getX();
             self.sprite.y = self.physics.getY();
             self.nameLabel.x = self.physics.getX() - 2;

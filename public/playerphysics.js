@@ -51,10 +51,24 @@ $(function() {
             return App.GameEngine.Map.hitTest(x, y);
         };
 
-        self.update = function(currentX, currentY, upPressed, leftPressed, rightPressed) {
-            self.currentX = currentX;
-            self.currentY = currentY;
+        self.serverUpdate = function(x, y, incx, incy) {
+            self.currentX = x;
+            self.currentY = y;
+            self.goalx = 0;
+            self.goaly = 0;
+            self.incx = 0;
+            self.incy = 0;
+            self.jumpBoost = 0;
+            self.horizontalFriction = 0;
+            self.boundary = 0;
+            self.crossing = 0;
+            self.centerx = 0;
+            self.centery = 0;
 
+            self.updateBoundingBox();
+        };
+
+        self.update = function(upPressed, leftPressed, rightPressed) {
             self.calculateHorizontalFriction();
 
             if (self.jumping) {
